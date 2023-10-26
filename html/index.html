@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import to DB</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"></head>
+
+</head>
+
+<body>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+            <h3 class="text-center" id="header">Import to DB</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3" >
+            <form id="uploadForm" margin=0 auto class="form-group">
+                <input type="file" id="myFiles" accept=".txt" multiple class="form-control" size="50"/>
+                <button class="btn btn-default" size="50">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3" >
+            <h3 class="text-center" id="uploadStatus">Upload Status</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3" >
+            <h3 class="text-center" id="uploadMessage">Upload Message</h3>
+        </div>
+    </div>
+
+    <script >
+
+        const PORT = 3500
+
+        const PUBLIC_PORT = 3501
+
+        const form = document.getElementById('uploadForm')
+
+        const sendFiles = async () => {
+
+            const filesNames = []
+
+            // Object 
+            const myFiles = document.getElementById('myFiles').files
+
+            const formData = new FormData()
+
+            for (const key of Object.keys(myFiles)) {
+
+                const fileName = myFiles.item(key).name;
+
+                formData.append(fileName, myFiles.item(key))
+
+                filesNames.push(`${fileName}`)
+
+            }
+
+            const response = await fetch(`http://localhost:${PORT}/upload`, {
+                method: 'POST',
+                body: formData
+            })
+
+            const json = await response.json()
+
+            for (const fileName of filesNames) {
+
+                window.open(`//www.localhost:${PUBLIC_PORT}/${fileName}`)
+
+            }
+
+            const uploadStatus = document.getElementById('uploadStatus')
+
+            uploadStatus.innerText = `Status: ${json.status}`
+
+            const uploadMessage = document.getElementById('uploadMessage')
+
+            uploadMessage.innerText = `${json.message}`
+
+            const saveToDbStatus = await fetch(`http://localhost:${PORT}/savetodb?files=${json.message}`, {
+                method: 'GET'
+            })
+
+            console.log(`saveToDbStatus: ${saveToDbStatus}`)
+
+        }
+
+        form.addEventListener('submit', (e) => {
+
+            e.preventDefault()
+
+            sendFiles()
+
+        })
+
+    </script>
+
+</body>
+
+</html>

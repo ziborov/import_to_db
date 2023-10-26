@@ -1,0 +1,22 @@
+{
+  "name": "Import the dump file into the DB",
+  "version": "1.0.13",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "Oleksandr Ziborov",
+  "license": "",
+  "dependencies": {
+    "express": "^4.18.1",
+    "express-fileupload": "^1.4.0",
+    "mongodb": "^6.1.0",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
